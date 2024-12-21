@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"text/template"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -19,7 +20,7 @@ type Config struct {
 	CompanyAddress string `yaml:"companyAddress"`
 	BankName       string `yaml:"bankName"`
 	BankAddress    string `yaml:"bankAddress"`
-	Reference      string `yaml:"reference"`
+	AccountName    string `yaml:"accountName"`
 	IBAN           string `yaml:"iban"`
 	BIC            string `yaml:"bic"`
 }
@@ -30,6 +31,7 @@ type Invoice struct {
 	Services     []Service `yaml:"services"`
 	DueDate      string    `yaml:"dueDate"`
 	IssueDate    string    `yaml:"issueDate"`
+	TotalAmount  float64
 }
 
 type Service struct {
@@ -37,6 +39,7 @@ type Service struct {
 	Description string  `yaml:"description"`
 	Quantity    int     `yaml:"quantity"`
 	Price       float64 `yaml:"price"`
+	PriceTotal  float64
 }
 
 func main() {
@@ -57,9 +60,6 @@ func main() {
 	parseYAML(configPath, &config)
 	parseYAML(invoicePath, &invoice)
 
-	fmt.Println("company name:", config.CompanyName)
-	fmt.Println("invoice name:", invoice.Name)
-
 	templateFile := "invoice.templ"
 	template, err := template.New(templateFile).ParseFiles(templateFile)
 	if err != nil {
@@ -72,21 +72,26 @@ func main() {
 		Invoice: invoice,
 	}
 
-	// TODO: automate invoice dates
-	// document.Invoice.DueDate = time.Now().Format("DD/MM/YY")
-	// document.Invoice.IssueDate = time.Now().Format("DD/MM/YY")
+	t := time.Now()
+	date := fmt.Sprintf("%d %s %d", t.Day(), t.Month().String(), t.Year())
+
+	if document.Invoice.DueDate == "" {
+		document.Invoice.DueDate = date
+	}
+	if document.Invoice.IssueDate == "" {
+		document.Invoice.IssueDate = date
+	}
 
 	// TODO: calculate total eur
 
 	err = template.Execute(os.Stdout, document)
 	if err != nil {
-		fmt.Println("error executing template:", err.Error())
+		fmt.Fprintf(os.Stderr, "error executing template: %s", err.Error())
+		os.Exit(1)
 	}
 }
 
 func parseYAML(path string, out interface{}) {
-	fmt.Println("path:", path)
-
 	data, err := os.ReadFile(path)
 	if err != nil {
 		fmt.Println("error reading file:", err.Error())

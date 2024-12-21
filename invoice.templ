@@ -91,13 +91,12 @@
     <div class="addresses">
       <div class="address">
         <strong>Billed to</strong><br />
-        {{ .Invoice.Customer.Name }}<br />
-        {{ .Invoice.Customer.Email }}
+        {{ .Invoice.CustomerName }}
       </div>
       <div class="address">
         <strong>Issued by</strong><br />
-        {{ .Company.Name }}<br />
-        {{ .Company.Address }}
+        {{ .Config.CompanyName }}<br />
+        {{ .Config.CompanyAddress }}
       </div>
     </div>
 
@@ -123,7 +122,7 @@
           <td>{{ .Description }}</td>
           <td>{{ .Quantity }}</td>
           <td class="text-right">{{ .Price }} EUR</td>
-          <td class="text-right">TODO: calculate me</td>
+          <td class="text-right">{{ .PriceTotal }} EUR</td>
         </tr>
         {{ end }}
         <tr class="bottom-separator">
@@ -132,8 +131,7 @@
         <tr>
           <td colspan="3"></td>
           <td class="text-left bold">Total</td>
-          <td class="text-right bold">120.00 EUR</td>
-          <!-- TODO: use calculated total ^ -->
+          <td class="text-right bold">{{ .Invoice.TotalAmount }}</td>
         </tr>
         <tr class="line-row">
           <td colspan="3"></td>
@@ -144,17 +142,16 @@
         <tr>
           <td colspan="3"></td>
           <td class="text-left bold"><h3>Amount due</h3></td>
-          <td class="text-right bold"><h3>120.00 EUR</h3></td>
+          <td class="text-right bold"><h3>{{ .Invoice.TotalAmount }}</h3></td>
         </tr>
       </tbody>
     </table>
 
     <p><strong>Bank details</strong></p>
     <p>
-      Reference: 11111111<br />
-      Account holder: ACME Co., Ltd<br />
-      BIC: XYZ<br />
-      IBAN: ABC<br />
+      Account holder: {{ .Config.AccountName }}<br />
+      IBAN: {{ .Config.IBAN }}<br />
+      BIC: {{ .Config.BIC }}<br />
       Bank name and address:<br />
     </p>
   </body>
