@@ -4,7 +4,6 @@ import (
 	"flag"
 	"fmt"
 	"os"
-	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -25,7 +24,7 @@ type Invoice struct {
 	Name     string    `yaml:"name"`
 	Customer Customer  `yaml:"customer"`
 	Services []Service `yaml:"services"`
-	Due      time.Time `yaml:"due"`
+	Due      string    `yaml:"due"`
 }
 
 // Customer is the receiver of an invoice.
@@ -52,40 +51,28 @@ func main() {
 		os.Exit(1)
 	}
 
-	// parse config yaml
-	config := parseConfigFile(configPath)
-	fmt.Println("company name:", config.Company.Name)
+	config := Config{}
+	invoice := Invoice{}
 
-	// parse invoice yaml
-	fmt.Println("invoice:", invoicePath)
+	parseYAML(configPath, &config)
+	parseYAML(invoicePath, &invoice)
+
+	fmt.Println("company name:", config.Company.Name)
+	fmt.Println("invoice name:", invoice.Name)
 }
 
-func parseConfigFile(path string) Config {
-	var config Config
+func parseYAML(path string, out interface{}) {
+	fmt.Println("path:", path)
 
-	configData, err := os.ReadFile(path)
+	data, err := os.ReadFile(path)
 	if err != nil {
 		fmt.Println("error reading file:", err.Error())
 		os.Exit(1)
 	}
 
-	yamlerr := yaml.Unmarshal(configData, &config)
+	yamlerr := yaml.Unmarshal(data, out)
 	if yamlerr != nil {
-		fmt.Println("error parsing yaml:", yamlerr.Error())
+		fmt.Println("error parsing yaml:", err.Error())
+		os.Exit(1)
 	}
-	return config
-}
-
-func parseYAML(path string, out interface{}) error {
-	data, err := os.ReadFile(path)
-	if err != nil {
-		return fmt.Errorf("error reading file: %s", err)
-	}
-
-	yamlerr := yaml.Unmarshal(data, &out)
-	if yamlerr != nil {
-		return fmt.Errorf("error parsing yaml: %s", err)
-	}
-
-	return nil
 }
