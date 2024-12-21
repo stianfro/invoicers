@@ -1,0 +1,12 @@
+name: INV-001
+customer:
+  name: x
+  email: y
+services:
+  - name: foo
+    quantity: 1
+    price: 1
+  - name: bar
+    quantity: 1
+    price: 1
+due: date

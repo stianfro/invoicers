@@ -1,0 +1,8 @@
+company:
+  name: foo
+  address: bar
+bankAccount:
+  accountHolder: x
+  iban: y
+  name: z
+  address: a
