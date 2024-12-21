@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Invoice</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        line-height: 1.5;
+      }
+      h1,
+      h2,
+      h3 {
+        margin: 0 0 8px 0;
+      }
+      hr {
+        margin: 20px 0;
+      }
+      .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .invoice-header h1 {
+        margin-right: 20px;
+      }
+      .addresses {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 40px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th {
+        text-align: left;
+        border-bottom: 2px solid #000;
+        padding-bottom: 5px;
+      }
+      td {
+        padding: 8px 0;
+      }
+      .amount-due {
+        font-weight: bold;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="invoice-header">
+      <h1>INVOICE</h1>
+      <div>
+        <div>invoice number: 001</div>
+        <div>issue date: 21 December 2024</div>
+      </div>
+    </div>
+    <hr />
+
+    <div class="addresses">
+      <div>
+        <strong>Billed to</strong><br />
+        Customer LLC
+      </div>
+      <div>
+        <strong>Issued by</strong><br />
+        ACME Co., Ltd<br />
+        Sakura 1-2-3<br />
+        Shibuya-ku<br />
+        111-0001<br />
+        Tokyo-to<br />
+        Japan
+      </div>
+    </div>
+
+    <h2>1 EUR due by 21 December 2024</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Product or service</th>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Unit price</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Foo</td>
+          <td></td>
+          <td>1</td>
+          <td>100.00 EUR</td>
+          <td>100.00 EUR</td>
+        </tr>
+        <tr>
+          <td>Bar</td>
+          <td>Overtime</td>
+          <td>2</td>
+          <td>10.00 EUR</td>
+          <td>20.00 EUR</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="amount-due">Amount Due 120.00 EUR</h3>
+
+    <p><strong>Bank details</strong></p>
+    <table>
+      <tr>
+        <td>Reference</td>
+        <td>11111111</td>
+      </tr>
+      <tr>
+        <td>Account holder</td>
+        <td>ACME Co., Ltd</td>
+      </tr>
+      <tr>
+        <td>BIC</td>
+        <td>XYZ</td>
+      </tr>
+      <tr>
+        <td>IBAN</td>
+        <td>ABC</td>
+      </tr>
+      <tr>
+        <td>Bank name and address</td>
+        <td>
+          Foo<br />
+          Bar<br />
+          Baz
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
