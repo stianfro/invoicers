@@ -2,7 +2,9 @@ companyName: ACME Co., Ltd
 companyAddress: |
   Street 1
   Japan
-iban: 1234578
+iban: AB99 1234 5789 0000
+bic: 123
+accountName: 株式会社Foo
 bankName: BigBank
 bankAddress: |
   Street 2
