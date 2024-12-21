@@ -10,42 +10,71 @@
         line-height: 1.5;
       }
       h1,
-      h2,
-      h3 {
+      h2 {
         margin: 0 0 8px 0;
       }
       hr {
         margin: 20px 0;
+        border: none;
+        border-top: 0.1px solid #000;
       }
+      /* Header */
       .invoice-header {
         display: flex;
         justify-content: space-between;
         align-items: baseline;
       }
-      .invoice-header h1 {
-        margin-right: 20px;
-      }
       .addresses {
+        width: 50%;
         display: flex;
         justify-content: space-between;
         margin-bottom: 40px;
       }
+      .address {
+        width: 45%;
+        box-sizing: border-box;
+      }
+      /* Table styling */
       table {
         width: 100%;
         border-collapse: collapse;
         margin-bottom: 20px;
       }
-      th {
+      thead th {
         text-align: left;
-        border-bottom: 2px solid #000;
-        padding-bottom: 5px;
       }
-      td {
-        padding: 8px 0;
+      thead tr:first-child th {
+        padding-bottom: 8px;
       }
-      .amount-due {
-        font-weight: bold;
+      tbody td {
+        vertical-align: top;
+        padding: 6px 0;
+      }
+      .top-separator td,
+      .bottom-separator td {
+        padding: 0;
+      }
+      .top-separator td {
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+      }
+      .bottom-separator td {
+        border-top: 0.1px solid #000;
+      }
+      .text-left {
+        text-align: left;
+      }
+      .text-right {
         text-align: right;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .bold {
+        font-weight: bold;
+      }
+      .line-row td {
+        padding: 0;
       }
     </style>
   </head>
@@ -60,11 +89,11 @@
     <hr />
 
     <div class="addresses">
-      <div>
+      <div class="address">
         <strong>Billed to</strong><br />
         Customer LLC
       </div>
-      <div>
+      <div class="address">
         <strong>Issued by</strong><br />
         ACME Co., Ltd<br />
         Sakura 1-2-3<br />
@@ -80,32 +109,52 @@
     <table>
       <thead>
         <tr>
-          <th>Product or service</th>
-          <th>Description</th>
-          <th>Quantity</th>
-          <th>Unit price</th>
-          <th>Total</th>
+          <th style="width: 25%">Product or service</th>
+          <th style="width: 25%">Description</th>
+          <th style="width: 10%" class="text-center">Quantity</th>
+          <th style="width: 20%" class="text-right">Unit price</th>
+          <th style="width: 20%" class="text-right">Total</th>
+        </tr>
+        <tr class="top-separator">
+          <td colspan="5"></td>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>Foo</td>
           <td></td>
-          <td>1</td>
-          <td>100.00 EUR</td>
-          <td>100.00 EUR</td>
+          <td class="text-center">1</td>
+          <td class="text-right">100.00 EUR</td>
+          <td class="text-right">100.00 EUR</td>
         </tr>
         <tr>
           <td>Bar</td>
           <td>Overtime</td>
-          <td>2</td>
-          <td>10.00 EUR</td>
-          <td>20.00 EUR</td>
+          <td class="text-center">2</td>
+          <td class="text-right">10.00 EUR</td>
+          <td class="text-right">20.00 EUR</td>
+        </tr>
+        <tr class="bottom-separator">
+          <td colspan="5"></td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td class="text-left bold">Total</td>
+          <td class="text-right bold">120.00 EUR</td>
+        </tr>
+        <tr class="line-row">
+          <td colspan="3"></td>
+          <td colspan="2">
+            <hr style="margin: 0.1px" />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td class="text-left bold"><h3>Amount due</h3></td>
+          <td class="text-right bold"><h3>120.00 EUR</h3></td>
         </tr>
       </tbody>
     </table>
-
-    <h3 class="amount-due">Amount Due 120.00 EUR</h3>
 
     <p><strong>Bank details</strong></p>
     <p>
@@ -113,10 +162,10 @@
       Account holder: ACME Co., Ltd<br />
       BIC: XYZ<br />
       IBAN: ABC<br />
-      <!-- Bank name and address:<br /> -->
-      <!-- &nbsp;&nbsp;Foo<br /> -->
-      <!-- &nbsp;&nbsp;Bar<br /> -->
-      <!-- &nbsp;&nbsp;Baz -->
+      Bank name and address:<br />
+      &nbsp;&nbsp;Foo<br />
+      &nbsp;&nbsp;Bar<br />
+      &nbsp;&nbsp;Baz
     </p>
   </body>
 </html>
