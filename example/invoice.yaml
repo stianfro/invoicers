@@ -5,8 +5,8 @@ customer:
 services:
   - name: foo
     quantity: 1
-    price: 1
+    price: 1.0
   - name: bar
     quantity: 1
-    price: 1
+    price: 1.0
 due: date
