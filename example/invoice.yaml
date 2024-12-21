@@ -4,9 +4,11 @@ customer:
   email: y
 services:
   - name: foo
+    description: ""
     quantity: 1
     price: 1.0
   - name: bar
+    description: "overtime"
     quantity: 1
     price: 1.0
-due: date
+due: 21/12/2024

@@ -34,9 +34,10 @@ type Customer struct {
 }
 
 type Service struct {
-	Name     string  `yaml:"name"`
-	Quantity int     `yaml:"quantity"`
-	Price    float64 `yaml:"price"`
+	Name        string  `yaml:"name"`
+	Description string  `yaml:"description"`
+	Quantity    int     `yaml:"quantity"`
+	Price       float64 `yaml:"price"`
 }
 
 func main() {
