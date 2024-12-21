@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"text/template"
 
 	"gopkg.in/yaml.v3"
 )
@@ -60,6 +61,18 @@ func main() {
 
 	fmt.Println("company name:", config.Company.Name)
 	fmt.Println("invoice name:", invoice.Name)
+
+	templateFile := "invoice.templ"
+	template, err := template.New(templateFile).ParseFiles(templateFile)
+	if err != nil {
+		fmt.Println("error parsing template:", err.Error())
+		os.Exit(1)
+	}
+
+	err = template.Execute(os.Stdout, config)
+	if err != nil {
+		fmt.Println("error executing template:", err.Error())
+	}
 }
 
 func parseYAML(path string, out interface{}) {

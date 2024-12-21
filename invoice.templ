@@ -1,0 +1,168 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Invoice</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 40px;
+        line-height: 1.5;
+      }
+      h1,
+      h2 {
+        margin: 0 0 8px 0;
+      }
+      hr {
+        margin: 20px 0;
+        border: none;
+        border-top: 0.1px solid #000;
+      }
+      /* Header */
+      .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+      }
+      .addresses {
+        width: 50%;
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 40px;
+      }
+      .address {
+        width: 45%;
+        box-sizing: border-box;
+      }
+      /* Table styling */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      thead th {
+        text-align: left;
+      }
+      thead tr:first-child th {
+        padding-bottom: 8px;
+      }
+      tbody td {
+        vertical-align: top;
+        padding: 6px 0;
+      }
+      .top-separator td,
+      .bottom-separator td {
+        padding: 0;
+      }
+      .top-separator td {
+        border-top: 1px solid #000;
+        border-bottom: 1px solid #000;
+      }
+      .bottom-separator td {
+        border-top: 0.1px solid #000;
+      }
+      .text-left {
+        text-align: left;
+      }
+      .text-right {
+        text-align: right;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .bold {
+        font-weight: bold;
+      }
+      .line-row td {
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="invoice-header">
+      <h1>INVOICE</h1>
+      <div>
+        <div>Invoice number: 001</div>
+        <div>Issue date: 21 December 2024</div>
+      </div>
+    </div>
+    <hr />
+
+    <div class="addresses">
+      <div class="address">
+        <strong>Billed to</strong><br />
+        Customer LLC
+      </div>
+      <div class="address">
+        <strong>Issued by</strong><br />
+        {{ .Company.Name }}<br />
+        Sakura 1-2-3<br />
+        Shibuya-ku<br />
+        111-0001<br />
+        Tokyo-to<br />
+        Japan
+      </div>
+    </div>
+
+    <h2>1 EUR due by 21 December 2024</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th style="width: 25%">Product or service</th>
+          <th style="width: 25%">Description</th>
+          <th style="width: 10%" class="text-center">Quantity</th>
+          <th style="width: 20%" class="text-right">Unit price</th>
+          <th style="width: 20%" class="text-right">Total</th>
+        </tr>
+        <tr class="top-separator">
+          <td colspan="5"></td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Foo</td>
+          <td></td>
+          <td class="text-center">1</td>
+          <td class="text-right">100.00 EUR</td>
+          <td class="text-right">100.00 EUR</td>
+        </tr>
+        <tr>
+          <td>Bar</td>
+          <td>Overtime</td>
+          <td class="text-center">2</td>
+          <td class="text-right">10.00 EUR</td>
+          <td class="text-right">20.00 EUR</td>
+        </tr>
+        <tr class="bottom-separator">
+          <td colspan="5"></td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td class="text-left bold">Total</td>
+          <td class="text-right bold">120.00 EUR</td>
+        </tr>
+        <tr class="line-row">
+          <td colspan="3"></td>
+          <td colspan="2">
+            <hr style="margin: 0.1px" />
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3"></td>
+          <td class="text-left bold"><h3>Amount due</h3></td>
+          <td class="text-right bold"><h3>120.00 EUR</h3></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p><strong>Bank details</strong></p>
+    <p>
+      Reference: 11111111<br />
+      Account holder: ACME Co., Ltd<br />
+      BIC: XYZ<br />
+      IBAN: ABC<br />
+      Bank name and address:<br />
+    </p>
+  </body>
+</html>
