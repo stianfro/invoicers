@@ -1,8 +1,9 @@
-company:
-  name: foo
-  address: bar
-bankAccount:
-  accountHolder: x
-  iban: y
-  name: z
-  address: a
+companyName: ACME Co., Ltd
+companyAddress: |
+  Street 1
+  Japan
+iban: 1234578
+bankName: BigBank
+bankAddress: |
+  Street 2
+  UK

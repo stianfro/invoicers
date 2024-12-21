@@ -1,14 +1,13 @@
 name: INV-001
-customer:
-  name: x
-  email: y
+customerName: My Local Customer
 services:
-  - name: foo
-    description: ""
+  - name: Work
+    description: "Regular work"
     quantity: 1
     price: 1.0
-  - name: bar
-    description: "overtime"
-    quantity: 1
+  - name: Overtime
+    description: "1 hour"
+    quantity: 2
     price: 1.0
-due: 21/12/2024
+dueDate: 21/12/2024 # automate?
+issueDate: 21/12/2024 # automate?

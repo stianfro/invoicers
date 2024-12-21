@@ -9,29 +9,27 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Config struct {
-	Company Company `yaml:"company"`
+type Document struct {
+	Config  Config
+	Invoice Invoice
 }
 
-// Company is the sender of an invoice.
-type Company struct {
-	Name string `yaml:"name"`
-
-	// Address is the physical address of a company.
-	Address string `yaml:"address"`
+type Config struct {
+	CompanyName    string `yaml:"companyName"`
+	CompanyAddress string `yaml:"companyAddress"`
+	BankName       string `yaml:"bankName"`
+	BankAddress    string `yaml:"bankAddress"`
+	Reference      string `yaml:"reference"`
+	IBAN           string `yaml:"iban"`
+	BIC            string `yaml:"bic"`
 }
 
 type Invoice struct {
-	Name     string    `yaml:"name"`
-	Customer Customer  `yaml:"customer"`
-	Services []Service `yaml:"services"`
-	Due      string    `yaml:"due"`
-}
-
-// Customer is the receiver of an invoice.
-type Customer struct {
-	Name  string `yaml:"name"`
-	Email string `yaml:"email"`
+	Name         string    `yaml:"name"`
+	CustomerName string    `yaml:"customerName"`
+	Services     []Service `yaml:"services"`
+	DueDate      string    `yaml:"dueDate"`
+	IssueDate    string    `yaml:"issueDate"`
 }
 
 type Service struct {
@@ -59,7 +57,7 @@ func main() {
 	parseYAML(configPath, &config)
 	parseYAML(invoicePath, &invoice)
 
-	fmt.Println("company name:", config.Company.Name)
+	fmt.Println("company name:", config.CompanyName)
 	fmt.Println("invoice name:", invoice.Name)
 
 	templateFile := "invoice.templ"
@@ -69,7 +67,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	err = template.Execute(os.Stdout, config)
+	document := Document{
+		Config:  config,
+		Invoice: invoice,
+	}
+
+	// TODO: automate invoice dates
+	// document.Invoice.DueDate = time.Now().Format("DD/MM/YY")
+	// document.Invoice.IssueDate = time.Now().Format("DD/MM/YY")
+
+	// TODO: calculate total eur
+
+	err = template.Execute(os.Stdout, document)
 	if err != nil {
 		fmt.Println("error executing template:", err.Error())
 	}
