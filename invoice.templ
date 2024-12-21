@@ -82,8 +82,8 @@
     <div class="invoice-header">
       <h1>INVOICE</h1>
       <div>
-        <div>Invoice number: 001</div>
-        <div>Issue date: 21 December 2024</div>
+        <div>Invoice number: {{ .Invoice.Name }}</div>
+        <div>Issue date: {{ .Invoice.IssueDate }}</div>
       </div>
     </div>
     <hr />
@@ -91,20 +91,17 @@
     <div class="addresses">
       <div class="address">
         <strong>Billed to</strong><br />
-        Customer LLC
+        {{ .Invoice.Customer.Name }}<br />
+        {{ .Invoice.Customer.Email }}
       </div>
       <div class="address">
         <strong>Issued by</strong><br />
         {{ .Company.Name }}<br />
-        Sakura 1-2-3<br />
-        Shibuya-ku<br />
-        111-0001<br />
-        Tokyo-to<br />
-        Japan
+        {{ .Company.Address }}
       </div>
     </div>
 
-    <h2>1 EUR due by 21 December 2024</h2>
+    <h2>1 EUR due by {{ .Invoice.DueDate }}</h2>
 
     <table>
       <thead>
@@ -120,20 +117,15 @@
         </tr>
       </thead>
       <tbody>
+        {{ range .Invoice.Services }}
         <tr>
-          <td>Foo</td>
-          <td></td>
-          <td class="text-center">1</td>
-          <td class="text-right">100.00 EUR</td>
-          <td class="text-right">100.00 EUR</td>
+          <td>{{ .Name }}</td>
+          <td>{{ .Description }}</td>
+          <td>{{ .Quantity }}</td>
+          <td class="text-right">{{ .Price }} EUR</td>
+          <td class="text-right">TODO: calculate me</td>
         </tr>
-        <tr>
-          <td>Bar</td>
-          <td>Overtime</td>
-          <td class="text-center">2</td>
-          <td class="text-right">10.00 EUR</td>
-          <td class="text-right">20.00 EUR</td>
-        </tr>
+        {{ end }}
         <tr class="bottom-separator">
           <td colspan="5"></td>
         </tr>
@@ -141,6 +133,7 @@
           <td colspan="3"></td>
           <td class="text-left bold">Total</td>
           <td class="text-right bold">120.00 EUR</td>
+          <!-- TODO: use calculated total ^ -->
         </tr>
         <tr class="line-row">
           <td colspan="3"></td>
