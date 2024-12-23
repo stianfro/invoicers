@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"fmt"
 	"os"
@@ -10,21 +11,22 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+//go:embed invoice.templ
+var templateFS embed.FS
+
 type Document struct {
 	Config  Config
 	Invoice Invoice
 }
 
 type Config struct {
-	CompanyName    string `yaml:"companyName"`
-	CompanyAddress string `yaml:"companyAddress"`
-	BankName       string `yaml:"bankName"`
-	BankAddress    string `yaml:"bankAddress"`
-	AccountName    string `yaml:"accountName"`
-	IBAN           string `yaml:"iban"`
-	BIC            string `yaml:"bic"`
+	CompanyName    string   `yaml:"companyName"`
 	CompanyAddress []string `yaml:"companyAddress"`
+	BankName       string   `yaml:"bankName"`
 	BankAddress    []string `yaml:"bankAddress"`
+	AccountName    string   `yaml:"accountName"`
+	IBAN           string   `yaml:"iban"`
+	BIC            string   `yaml:"bic"`
 }
 
 type Invoice struct {
@@ -33,7 +35,8 @@ type Invoice struct {
 	Services     []Service `yaml:"services"`
 	DueDate      string    `yaml:"dueDate"`
 	IssueDate    string    `yaml:"issueDate"`
-	TotalAmount  float64
+	OnCallNOK    int       `yaml:"onCallNOK"`
+	TotalAmount  string
 }
 
 type Service struct {
@@ -62,8 +65,7 @@ func main() {
 	parseYAML(configPath, &config)
 	parseYAML(invoicePath, &invoice)
 
-	templateFile := "invoice.templ"
-	template, err := template.New(templateFile).ParseFiles(templateFile)
+	template, err := template.New("invoice.templ").ParseFS(templateFS, "invoice.templ")
 	if err != nil {
 		fmt.Println("error parsing template:", err.Error())
 		os.Exit(1)
@@ -84,12 +86,18 @@ func main() {
 		document.Invoice.IssueDate = date
 	}
 
+	var totalRaw float64
+
 	for i, item := range document.Invoice.Services {
 		item.PriceTotal = item.Price * float64(item.Quantity)
 
-		document.Invoice.TotalAmount += item.PriceTotal
+		totalRaw += item.PriceTotal
 		document.Invoice.Services[i].PriceTotal = item.PriceTotal
 	}
+
+	document.Invoice.TotalAmount = fmt.Sprintf("%.2f", totalRaw)
+
+	// TODO: Calculate OnCall (NOK -> EUR using rate on 15th of current month)
 
 	err = template.Execute(os.Stdout, document)
 	if err != nil {
