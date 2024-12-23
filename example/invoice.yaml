@@ -4,10 +4,10 @@ services:
   - name: Work
     description: "Regular work"
     quantity: 1
-    price: 1.0
+    price: 100.0
   - name: Overtime
-    description: "1 hour"
+    description: "2 hours"
     quantity: 2
-    price: 1.0
+    price: 100.0
 # dueDate: 21/12/2024
 # issueDate: 21/12/2024
