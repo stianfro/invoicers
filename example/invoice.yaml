@@ -9,5 +9,5 @@ services:
     description: "1 hour"
     quantity: 2
     price: 1.0
-dueDate: 21/12/2024 # automate?
-issueDate: 21/12/2024 # automate?
+# dueDate: 21/12/2024
+# issueDate: 21/12/2024
