@@ -22,6 +22,7 @@
       .invoice-header {
         display: flex;
         justify-content: space-between;
+      <br />
         align-items: baseline;
       }
       .addresses {
@@ -81,10 +82,10 @@
   <body>
     <div class="invoice-header">
       <h1>INVOICE {{ .Invoice.Name }} from {{ .Config.CompanyName }}</h1>
-      <div>
-        <div>Invoice number: {{ .Invoice.Name }}</div>
-        <div>Issue date: {{ .Invoice.IssueDate }}</div>
-      </div>
+    </div>
+    <div>
+      <div>Invoice number: {{ .Invoice.Name }}</div>
+      <div>Issue date: {{ .Invoice.IssueDate }}</div>
     </div>
     <hr />
 
