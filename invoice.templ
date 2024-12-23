@@ -95,9 +95,12 @@
         {{ .Invoice.CustomerName }}
       </div>
       <div class="address">
+        <!-- TODO: fix address linebreaks -->
         <strong>Issued by</strong><br />
         {{ .Config.CompanyName }}<br />
-        {{ .Config.CompanyAddress }}
+        {{ range .Config.CompanyAddress }}
+        {{ . }}<br />
+        {{ end }}
       </div>
     </div>
 
@@ -154,6 +157,10 @@
       IBAN: {{ .Config.IBAN }}<br />
       BIC: {{ .Config.BIC }}<br />
       Bank name and address:<br />
+      {{ .Config.BankName }}<br />
+      {{ range .Config.BankAddress }}
+      {{ . }}<br />
+      {{ end }}
     </p>
   </body>
 </html>

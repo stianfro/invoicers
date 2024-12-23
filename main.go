@@ -23,6 +23,8 @@ type Config struct {
 	AccountName    string `yaml:"accountName"`
 	IBAN           string `yaml:"iban"`
 	BIC            string `yaml:"bic"`
+	CompanyAddress []string `yaml:"companyAddress"`
+	BankAddress    []string `yaml:"bankAddress"`
 }
 
 type Invoice struct {
