@@ -80,7 +80,7 @@
   </head>
   <body>
     <div class="invoice-header">
-      <h1>INVOICE</h1>
+      <h1>INVOICE {{ .Invoice.Name }} from {{ .Config.CompanyName }}</h1>
       <div>
         <div>Invoice number: {{ .Invoice.Name }}</div>
         <div>Issue date: {{ .Invoice.IssueDate }}</div>
