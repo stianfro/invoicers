@@ -82,7 +82,12 @@ func main() {
 		document.Invoice.IssueDate = date
 	}
 
-	// TODO: calculate total eur
+	for i, item := range document.Invoice.Services {
+		item.PriceTotal = item.Price * float64(item.Quantity)
+
+		document.Invoice.TotalAmount += item.PriceTotal
+		document.Invoice.Services[i].PriceTotal = item.PriceTotal
+	}
 
 	err = template.Execute(os.Stdout, document)
 	if err != nil {
