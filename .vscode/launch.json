@@ -6,7 +6,7 @@
       "type": "go",
       "request": "launch",
       "mode": "auto",
-      "program": "${workspaceFolder}/main.go",
+      "program": "${workspaceFolder}",
       "hideSystemGoroutines": true,
       "args": [
         "-config=./example/config.yaml",
