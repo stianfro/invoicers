@@ -9,5 +9,10 @@ services:
     description: "2 hours"
     quantity: 2
     price: 100.0
+  - name: Expense
+    description: "New equipment"
+    quantity: 1
+    price: 56.239
+onCallNOK: 4000
 # dueDate: 21/12/2024
 # issueDate: 21/12/2024
