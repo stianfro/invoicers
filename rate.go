@@ -3,8 +3,11 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 type RateQuery struct {
@@ -12,7 +15,8 @@ type RateQuery struct {
 }
 
 type RateData struct {
-	DataSets []RateDataSet `json:"dataSets"`
+	DataSets  []RateDataSet `json:"dataSets"`
+	Structure RateStructure `json:"structure"`
 }
 
 type RateDataSet struct {
@@ -27,16 +31,15 @@ type SeriesEntry struct {
 	Observations map[string][]string `json:"observations"`
 }
 
-var httpClient http.Client
-
-func GetRates() (RateData, error) {
-	// TODO: allow modifying number of observations (should be atleast 30)
-	rateAPI := "https://data.norges-bank.no/api/data/EXR/B.EUR.NOK.SP?format=sdmx-json&lastNObservations=1&locale=no"
+func GetDailyRates(observationCount int) (RateData, error) {
+	rateAPI := fmt.Sprintf("https://data.norges-bank.no/api/data/EXR/B.EUR.NOK.SP?format=sdmx-json&lastNObservations=%d&locale=no", observationCount)
 
 	req, err := http.NewRequest(http.MethodGet, rateAPI, http.NoBody)
 	if err != nil {
 		return RateData{}, err
 	}
+
+	httpClient := http.Client{}
 
 	res, err := httpClient.Do(req)
 	if err != nil {
@@ -64,4 +67,83 @@ func GetRates() (RateData, error) {
 	}
 
 	return rateQuery.Data, nil
+}
+
+type RateStructure struct {
+	Dimensions RateDimensions `json:"dimensions"`
+}
+
+type RateDimensions struct {
+	Observation []RateDimensionsObservation `json:"observation"`
+}
+
+type RateDimensionsObservation struct {
+	ID     string             `json:"id"`
+	Values []ObservationValue `json:"values"`
+}
+
+type ObservationValue struct {
+	Start string `json:"start"`
+	End   string `json:"end"`
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+}
+
+// loop over k,v in series entry observation
+// use k to access matching entry in dimensions observation
+func FindRateOn15th(data RateData) (string, error) {
+	if len(data.DataSets) == 0 {
+		return "", errors.New("rate dataset was empty")
+	}
+
+	rateObservations := data.DataSets[0].Series.Entry.Observations
+	dimensionsObservation := data.Structure.Dimensions.Observation
+
+	for key, rate := range rateObservations {
+		keyInt, err := strconv.Atoi(key)
+		if err != nil {
+			return "", err
+		}
+
+		if len(dimensionsObservation) == 0 {
+			return "", errors.New("dimension observations were empty")
+		}
+
+		observationValues := dimensionsObservation[0].Values[keyInt]
+
+		observationDate, err := ParseDate(observationValues.Start)
+		if err != nil {
+			return "", err
+		}
+
+		fmt.Println(observationDate)
+
+		now := time.Now()
+
+		if observationDate.Month() != now.Month() {
+			continue
+		}
+
+		if observationDate.Day() != 15 {
+			continue
+		}
+
+		// TODO: support months where 15th does not have entry (due to weekend etc)
+		// consider constructing a map or slice for a single month with the corresponding rates
+
+		return rate[0], nil
+	}
+
+	return "", nil
+}
+
+func ParseDate(date string) (time.Time, error) {
+	layout := "2006-01-02T15:04:05"
+
+	t, err := time.Parse(layout, date)
+	if err != nil {
+		return time.Time{}, err
+	}
+
+	return t, nil
 }
