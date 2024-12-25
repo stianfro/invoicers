@@ -8,7 +8,7 @@ func TestGetDailyRates(t *testing.T) {
 }
 
 func TestFindRateOn15th(t *testing.T) {
-	rates, _ := GetDailyRates(365) // TODO do some error assertions
+	rates, _ := GetDailyRates(30) // TODO do some error assertions
 
-	FindRateOn15th(rates, "January")
+	FindRateOn15th(rates)
 }
