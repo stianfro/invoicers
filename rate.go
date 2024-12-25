@@ -99,6 +99,8 @@ func FindRateOn15th(data RateData) (string, error) {
 	rateObservations := data.DataSets[0].Series.Entry.Observations
 	dimensionsObservation := data.Structure.Dimensions.Observation
 
+	var dayRate map[int]string
+
 	for key, rate := range rateObservations {
 		keyInt, err := strconv.Atoi(key)
 		if err != nil {
@@ -124,15 +126,17 @@ func FindRateOn15th(data RateData) (string, error) {
 			continue
 		}
 
-		if observationDate.Day() != 15 {
-			continue
-		}
+		dayRate[observationDate.Day()] = rate[0]
+
+		// if observationDate.Day() != 15 {
+		// 	continue
+		// }
 
 		// TODO: support months where 15th does not have entry (due to weekend etc)
 		// consider constructing a map or slice for a single month with the corresponding rates
-
-		return rate[0], nil
 	}
+
+	fmt.Println(dayRate)
 
 	return "", nil
 }
