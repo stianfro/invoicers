@@ -98,7 +98,7 @@ func main() {
 	document.Invoice.TotalAmount = fmt.Sprintf("%.2f", totalRaw)
 
 	// TODO: Calculate OnCall (NOK -> EUR using rate on 15th of current month)
-	rates, err := GetRates()
+	rates, err := GetDailyRates(30)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error getting exchange rates: %s", err.Error())
 		os.Exit(1)
