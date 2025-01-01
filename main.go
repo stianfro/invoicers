@@ -104,7 +104,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(rates.DataSets[0].Series.Entry.Observations["0"])
+	_, err = FindRateOn15th(rates)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error getting rate on 15th: %s", err.Error())
+		os.Exit(1)
+	}
 
 	err = template.Execute(os.Stdout, document)
 	if err != nil {

@@ -99,7 +99,7 @@ func FindRateOn15th(data RateData) (string, error) {
 	rateObservations := data.DataSets[0].Series.Entry.Observations
 	dimensionsObservation := data.Structure.Dimensions.Observation
 
-	var dayRate map[int]string
+	dayRate := make(map[int]string)
 
 	for key, rate := range rateObservations {
 		keyInt, err := strconv.Atoi(key)
@@ -118,11 +118,13 @@ func FindRateOn15th(data RateData) (string, error) {
 			return "", err
 		}
 
-		fmt.Println(observationDate)
+		// now := time.Now()
+		// if observationDate.Month().String() != now.Month().String() {
 
-		now := time.Now()
+		observationMonthString := observationDate.Month().String()
 
-		if observationDate.Month() != now.Month() {
+		// TODO: add better support for specifying month
+		if observationMonthString != "December" {
 			continue
 		}
 
@@ -132,13 +134,31 @@ func FindRateOn15th(data RateData) (string, error) {
 		// 	continue
 		// }
 
-		// TODO: support months where 15th does not have entry (due to weekend etc)
-		// consider constructing a map or slice for a single month with the corresponding rates
 	}
 
-	fmt.Println(dayRate)
+	// TODO: support months where 15th does not have entry (due to weekend etc)
+	// consider constructing a map or slice for a single month with the corresponding rates
+
+	// decide return value here
+
+	foo := dayRate[15]
+
+	fmt.Println(foo)
+	fmt.Println(dayRate[16])
 
 	return "", nil
+}
+
+func DecideDay(dayRate map[int]string) string {
+	if dayRate[15] != "" {
+		return dayRate[15]
+	}
+
+	if dayRate[14] != "" {
+		return dayRate[14]
+	}
+
+	return dayRate[16]
 }
 
 func ParseDate(date string) (time.Time, error) {
