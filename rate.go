@@ -129,24 +129,9 @@ func FindRateOn15th(data RateData) (string, error) {
 		}
 
 		dayRate[observationDate.Day()] = rate[0]
-
-		// if observationDate.Day() != 15 {
-		// 	continue
-		// }
-
 	}
 
-	// TODO: support months where 15th does not have entry (due to weekend etc)
-	// consider constructing a map or slice for a single month with the corresponding rates
-
-	// decide return value here
-
-	foo := dayRate[15]
-
-	fmt.Println(foo)
-	fmt.Println(dayRate[16])
-
-	return "", nil
+	return DecideDay(dayRate), nil
 }
 
 func DecideDay(dayRate map[int]string) string {
