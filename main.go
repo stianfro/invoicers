@@ -5,6 +5,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 	"text/template"
 	"time"
 
@@ -86,6 +87,41 @@ func main() {
 		document.Invoice.IssueDate = date
 	}
 
+	rates, err := GetDailyRates(30)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error getting exchange rates: %s", err.Error())
+		os.Exit(1)
+	}
+
+	rate, err := FindRateOn15th(rates)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error getting rate on 15th: %s", err.Error())
+		os.Exit(1)
+	}
+
+	rateFloat, err := strconv.ParseFloat(rate, 64)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error converting rate to float64: %s", err.Error())
+		os.Exit(1)
+	}
+
+	onCallEUR := float64(document.Invoice.OnCallNOK) / rateFloat
+	onCallEURShort := fmt.Sprintf("%.2f", onCallEUR)
+
+	onCallEurShortFloat, err := strconv.ParseFloat(onCallEURShort, 64)
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error converting to float64: %s", err.Error())
+	}
+
+	onCallService := Service{
+		Name:        "On call",
+		Description: fmt.Sprintf("NOK %d converted using NOK/EUR rate %s", document.Invoice.OnCallNOK, rate),
+		Quantity:    1,
+		Price:       onCallEurShortFloat,
+	}
+
+	document.Invoice.Services = append(document.Invoice.Services, onCallService)
+
 	var totalRaw float64
 
 	for i, item := range document.Invoice.Services {
@@ -96,19 +132,6 @@ func main() {
 	}
 
 	document.Invoice.TotalAmount = fmt.Sprintf("%.2f", totalRaw)
-
-	// TODO: Calculate OnCall (NOK -> EUR using rate on 15th of current month)
-	rates, err := GetDailyRates(30)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "error getting exchange rates: %s", err.Error())
-		os.Exit(1)
-	}
-
-	_, err = FindRateOn15th(rates)
-	if err != nil {
-		fmt.Fprintf(os.Stderr, "error getting rate on 15th: %s", err.Error())
-		os.Exit(1)
-	}
 
 	err = template.Execute(os.Stdout, document)
 	if err != nil {
