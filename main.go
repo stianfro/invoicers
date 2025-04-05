@@ -37,6 +37,7 @@ type Invoice struct {
 	DueDate      string    `yaml:"dueDate"`
 	IssueDate    string    `yaml:"issueDate"`
 	OnCallNOK    int       `yaml:"onCallNOK"`
+	Month        string    `yaml:"invoiceMonth"`
 	TotalAmount  string
 }
 
@@ -93,7 +94,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	rate, err := FindRateOn15th(rates)
+	rate, err := FindRateOn15th(rates, document.Invoice.Month)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error getting rate on 15th: %s", err.Error())
 		os.Exit(1)

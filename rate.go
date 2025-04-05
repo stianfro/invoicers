@@ -91,7 +91,7 @@ type ObservationValue struct {
 
 // loop over k,v in series entry observation
 // use k to access matching entry in dimensions observation
-func FindRateOn15th(data RateData) (string, error) {
+func FindRateOn15th(data RateData, invoiceMonth string) (string, error) {
 	if len(data.DataSets) == 0 {
 		return "", errors.New("rate dataset was empty")
 	}
@@ -118,13 +118,9 @@ func FindRateOn15th(data RateData) (string, error) {
 			return "", err
 		}
 
-		// now := time.Now()
-		// if observationDate.Month().String() != now.Month().String() {
-
 		observationMonthString := observationDate.Month().String()
 
-		// TODO: add better support for specifying month
-		if observationMonthString != "December" {
+		if observationMonthString != invoiceMonth {
 			continue
 		}
 
