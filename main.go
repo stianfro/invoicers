@@ -106,7 +106,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	onCallEUR := float64(document.Invoice.OnCallNOK) / rateFloat
+	onCallEUR := CalculateOnCallEUR(document.Invoice.OnCallNOK, rateFloat)
 	onCallEURShort := fmt.Sprintf("%.2f", onCallEUR)
 
 	onCallEurShortFloat, err := strconv.ParseFloat(onCallEURShort, 64)
@@ -153,4 +153,11 @@ func parseYAML(path string, out interface{}) {
 		fmt.Println("error parsing yaml:", err.Error())
 		os.Exit(1)
 	}
+}
+
+// CalculateOnCallEUR converts NOK to EUR and adds 12% markup.
+// Formula: a + (a * 0.12) where a = nokAmount / rate
+func CalculateOnCallEUR(nokAmount int, rate float64) float64 {
+	a := float64(nokAmount) / rate
+	return a + (a * 0.12)
 }
