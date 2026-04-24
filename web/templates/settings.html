@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Settings</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 32px;
+        line-height: 1.5;
+      }
+      label {
+        display: block;
+        margin-top: 12px;
+      }
+      input,
+      textarea {
+        width: 100%;
+        max-width: 640px;
+      }
+      textarea {
+        min-height: 96px;
+      }
+      .section {
+        margin-bottom: 32px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Settings</h1>
+
+    <div class="section">
+      <h2>Profile</h2>
+      <form method="post" action="/settings/profile">
+        <label>Company name
+          <input name="companyName" value="{{ .Profile.CompanyName }}" />
+        </label>
+        <label>Company address
+          <textarea name="companyAddress">{{ joinLines .Profile.CompanyAddress }}</textarea>
+        </label>
+        <label>Account name
+          <input name="accountName" value="{{ .Profile.AccountName }}" />
+        </label>
+        <label>IBAN
+          <input name="iban" value="{{ .Profile.IBAN }}" />
+        </label>
+        <label>BIC
+          <input name="bic" value="{{ .Profile.BIC }}" />
+        </label>
+        <label>Bank name
+          <input name="bankName" value="{{ .Profile.BankName }}" />
+        </label>
+        <label>Bank address
+          <textarea name="bankAddress">{{ joinLines .Profile.BankAddress }}</textarea>
+        </label>
+        <button type="submit">Save profile</button>
+      </form>
+    </div>
+
+    <div class="section">
+      <h2>Default template</h2>
+      <form method="post" action="/settings/template">
+        <input type="hidden" name="id" value="{{ .Template.ID }}" />
+        <input type="hidden" name="customerId" value="{{ .Template.CustomerID }}" />
+        <label>Name
+          <input name="name" value="{{ .Template.Name }}" />
+        </label>
+        <label>Email recipient
+          <input name="emailRecipient" value="{{ .Template.EmailRecipient }}" />
+        </label>
+        <label>Email subject template
+          <input name="emailSubjectTemplate" value="{{ .Template.EmailSubjectTmpl }}" />
+        </label>
+        <label>Email body template
+          <textarea name="emailBodyTemplate">{{ .Template.EmailBodyTmpl }}</textarea>
+        </label>
+        <label>Payment terms days
+          <input name="paymentTermsDays" type="number" value="{{ .Template.PaymentTermsDays }}" />
+        </label>
+        {{ with index .Template.DefaultLineItems 0 }}
+        <label>Default line item name
+          <input name="lineItemName" value="{{ .Name }}" />
+        </label>
+        <label>Default line item description
+          <input name="lineItemDescription" value="{{ .Description }}" />
+        </label>
+        <label>Default quantity
+          <input name="lineItemQuantity" type="number" value="{{ .Quantity }}" />
+        </label>
+        <label>Default unit price (EUR)
+          <input name="lineItemUnitPrice" value="{{ moneyInput .UnitPriceCents }}" />
+        </label>
+        {{ end }}
+        <label>
+          <input name="onCallEnabled" type="checkbox" {{ if .Template.OnCallEnabled }}checked{{ end }} />
+          Enable on-call conversion
+        </label>
+        <button type="submit">Save template</button>
+      </form>
+    </div>
+  </body>
+</html>

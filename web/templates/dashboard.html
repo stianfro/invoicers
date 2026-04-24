@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Invoices</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 32px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 8px 0;
+        border-bottom: 1px solid #ddd;
+      }
+      form {
+        margin-bottom: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Invoices</h1>
+
+    <form method="post" action="/invoices/create-next">
+      <button type="submit">Create next invoice</button>
+    </form>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Number</th>
+          <th>Month</th>
+          <th>Status</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ range .Invoices }}
+        <tr>
+          <td><a href="/invoices/{{ .ID }}">{{ .Number }}</a></td>
+          <td>{{ .InvoiceMonth.Format "2006-01" }}</td>
+          <td>{{ .Status }}</td>
+          <td>{{ money .TotalAmountCents }}</td>
+        </tr>
+        {{ else }}
+        <tr>
+          <td colspan="4">No invoices yet.</td>
+        </tr>
+        {{ end }}
+      </tbody>
+    </table>
+  </body>
+</html>

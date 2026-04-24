@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: invoicers
+  namespace: invoicers
+  labels:
+    app.kubernetes.io/name: invoicers
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: invoicers
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: invoicers
+    spec:
+      containers:
+        - name: invoicers
+          image: ghcr.io/stianfro/invoicers:latest
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: INVOICERS_ADDR
+              value: ":8080"
+            - name: INVOICERS_DATA_DIR
+              value: /data
+            - name: INVOICERS_DB_PATH
+              value: /data/invoicers.db
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: invoicers-data

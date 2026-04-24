@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ .Invoice.Number }}</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 32px;
+        line-height: 1.5;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 8px 0;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      .right {
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Invoice {{ .Invoice.Number }}</h1>
+    <p>Issued by {{ .Profile.CompanyName }}</p>
+    <p>Billed to {{ .Customer.Name }}</p>
+    <p>Issue date: {{ date .Invoice.IssueDate }}</p>
+    <p>Due date: {{ date .Invoice.DueDate }}</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Product or service</th>
+          <th>Description</th>
+          <th>Qty</th>
+          <th class="right">Unit price</th>
+          <th class="right">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{ range .Rows }}
+        <tr>
+          <td>{{ .Name }}</td>
+          <td>{{ .Description }}</td>
+          <td>{{ .Quantity }}</td>
+          <td class="right">{{ money .UnitPriceCents }}</td>
+          <td class="right">{{ money .TotalCents }}</td>
+        </tr>
+        {{ end }}
+      </tbody>
+    </table>
+
+    <h2>Amount due {{ money .Invoice.TotalAmountCents }}</h2>
+  </body>
+</html>
