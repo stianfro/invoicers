@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>{{ .Invoice.Number }}</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 32px;
+        line-height: 1.5;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 8px 0;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      input,
+      textarea {
+        width: 100%;
+      }
+      .actions form {
+        display: inline-block;
+        margin-right: 8px;
+      }
+      .panel {
+        margin-top: 24px;
+      }
+    </style>
+  </head>
+  <body>
+    <p><a href="/">Back to dashboard</a></p>
+    <h1>{{ .Invoice.Number }}</h1>
+    <p>Status: {{ .Invoice.Status }}</p>
+    <p>Customer: {{ .Customer.Name }}</p>
+    <p>Month: {{ .Invoice.InvoiceMonth.Format "2006-01" }}</p>
+
+    <div class="actions">
+      <form method="post" action="/invoices/{{ .Invoice.ID }}/render">
+        <button type="submit">Render HTML + PDF</button>
+      </form>
+      <form method="post" action="/invoices/{{ .Invoice.ID }}/generate-email-draft">
+        <button type="submit">Generate email draft</button>
+      </form>
+      <form method="post" action="/invoices/{{ .Invoice.ID }}/mark-sent">
+        <button type="submit">Mark sent</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Edit invoice</h2>
+      <form method="post" action="/invoices/{{ .Invoice.ID }}/update">
+        <label>Issue date
+          <input name="issueDate" type="date" value="{{ .Invoice.IssueDate.Format "2006-01-02" }}" />
+        </label>
+        <label>Due date
+          <input name="dueDate" type="date" value="{{ .Invoice.DueDate.Format "2006-01-02" }}" />
+        </label>
+        <label>On-call NOK
+          <input name="onCallNok" type="number" value="{{ .Invoice.OnCallNOK }}" />
+        </label>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+              <th>Qty</th>
+              <th>Unit price (EUR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range $i, $line := .Invoice.LineItems }}
+            <tr>
+              <td><input name="lineName{{ $i }}" value="{{ $line.Name }}" /></td>
+              <td><input name="lineDescription{{ $i }}" value="{{ $line.Description }}" /></td>
+              <td><input name="lineQuantity{{ $i }}" type="number" value="{{ $line.Quantity }}" /></td>
+              <td><input name="lineUnitPrice{{ $i }}" value="{{ moneyInput $line.UnitPriceCents }}" /></td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+
+        <input type="hidden" name="lineCount" value="{{ len .Invoice.LineItems }}" />
+        <button type="submit">Save invoice changes</button>
+      </form>
+    </div>
+
+    <div class="panel">
+      <h2>Artifacts</h2>
+      <p>HTML: {{ if .Invoice.HTMLPath }}<a href="{{ .Invoice.HTMLPath }}">{{ .Invoice.HTMLPath }}</a>{{ else }}Not rendered yet{{ end }}</p>
+      <p>PDF: {{ if .Invoice.PDFPath }}<a href="{{ .Invoice.PDFPath }}">{{ .Invoice.PDFPath }}</a>{{ else }}Not rendered yet{{ end }}</p>
+    </div>
+
+    <div class="panel">
+      <h2>Email draft</h2>
+      {{ if .Invoice.EmailDraft }}
+      <p><strong>To:</strong> {{ .Invoice.EmailDraft.Recipient }}</p>
+      <p><strong>Subject:</strong> {{ .Invoice.EmailDraft.Subject }}</p>
+      <pre>{{ .Invoice.EmailDraft.Body }}</pre>
+      {{ else }}
+      <p>No draft generated yet.</p>
+      {{ end }}
+    </div>
+  </body>
+</html>

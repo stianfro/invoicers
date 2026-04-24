@@ -12,6 +12,12 @@ go vet ./...          # Run static analysis
 go mod tidy           # Fix module dependencies
 ```
 
+## Release Workflow
+
+- Use Conventional Commits for branch commits and especially for PR titles.
+- Prefer squash merges so the merged commit on `main` stays release-please compatible.
+- `release-please` manages `CHANGELOG.md`, GitHub releases, and version tags from commits merged to `main`.
+
 ## Running the Application
 
 ```bash
